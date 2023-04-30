@@ -5,4 +5,4 @@ Type=Application
 Terminal=false
 Exec=uxplay -p
 Name=UXplay
-Icon=/home/tommy/.local/share/applications/Airplay.png
+Icon=~/.local/share/applications/Airplay.png
