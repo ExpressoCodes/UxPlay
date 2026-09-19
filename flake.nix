@@ -1,9 +1,7 @@
 {
   description = "UxPlay NixOS module - AirPlay receiver configuration";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
-  outputs = { self, nixpkgs }: {
+  outputs = { self }: {
     nixosModules.default = import ./uxplay.nix;
   };
 }
