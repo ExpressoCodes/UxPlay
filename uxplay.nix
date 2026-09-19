@@ -1,5 +1,20 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
+let
+  uxplayDesktop = pkgs.makeDesktopItem {
+    name = "uxplay";
+    desktopName = "UxPlay";
+    exec = "uxplay -p";
+    icon = "uxplay";
+    terminal = false;
+    encoding = "UTF-8";
+  };
+
+  uxplayIcon = pkgs.runCommand "uxplay-icon" {} ''
+    mkdir -p $out/share/icons/hicolor/256x256/apps
+    cp ${./Airplay.png} $out/share/icons/hicolor/256x256/apps/uxplay.png
+  '';
+in
 {
   # Open network ports
   networking.firewall.allowedTCPPorts = [ 7000 7001 7100 ];
@@ -8,8 +23,8 @@
   # To enable network-discovery
   services.avahi = {
     enable = true;
-    nssmdns4 = true;  # printing
-    openFirewall = true; # ensuring that firewall ports are open as needed
+    nssmdns4 = true;
+    openFirewall = true;
     publish = {
       enable = true;
       addresses = true;
@@ -21,6 +36,7 @@
 
   environment.systemPackages = with pkgs; [
     uxplay
+    uxplayDesktop
+    uxplayIcon
   ];
-
 }
