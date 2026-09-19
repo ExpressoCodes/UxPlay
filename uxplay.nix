@@ -1,19 +1,20 @@
 { config, pkgs, lib, ... }:
 
 let
-  uxplayTray = pkgs.writeShellApplication {
+  uxplayTray = pkgs.stdenv.mkDerivation {
     name = "uxplay-tray";
-    runtimeInputs = [ pkgs.uxplay pkgs.yad ];
-    text = ''
-      uxplay -p &
-      UXPLAY_PID=$!
-
-      yad --notification \
-          --image="${./Airplay.png}" \
-          --text="UxPlay - AirPlay Receiver" \
-          --menu="Quit UxPlay!kill $UXPLAY_PID"
-
-      kill "$UXPLAY_PID" 2>/dev/null
+    src = ./.;
+    nativeBuildInputs = [ pkgs.pkg-config pkgs.makeWrapper ];
+    buildInputs = [ pkgs.gtk3 pkgs.libayatana-appindicator ];
+    buildPhase = ''
+      cc uxplay-tray.c -o uxplay-tray \
+        $(pkg-config --cflags --libs gtk+-3.0 ayatana-appindicator3-0.1)
+    '';
+    installPhase = ''
+      mkdir -p $out/bin
+      cp uxplay-tray $out/bin/
+      wrapProgram $out/bin/uxplay-tray \
+        --prefix PATH : ${lib.makeBinPath [ pkgs.uxplay ]}
     '';
   };
 
