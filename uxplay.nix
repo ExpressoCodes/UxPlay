@@ -8,7 +8,7 @@
   # To enable network-discovery
   services.avahi = {
     enable = true;
-    nssmdns = true;  # printing
+    nssmdns4 = true;  # printing
     openFirewall = true; # ensuring that firewall ports are open as needed
     publish = {
       enable = true;
