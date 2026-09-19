@@ -21,13 +21,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const char *icon_path = getenv("UXPLAY_ICON");
-    AppIndicator *indicator = icon_path
-        ? app_indicator_new_with_path("uxplay", "uxplay",
-              APP_INDICATOR_CATEGORY_APPLICATION_STATUS,
-              g_path_get_dirname(icon_path))
-        : app_indicator_new("uxplay", "uxplay",
-              APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+    const char *theme_path = getenv("UXPLAY_ICON_THEME_PATH");
+    AppIndicator *indicator = app_indicator_new_with_path(
+        "uxplay", "uxplay",
+        APP_INDICATOR_CATEGORY_APPLICATION_STATUS,
+        theme_path ? theme_path : "");
     app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
 
     GtkWidget *menu = gtk_menu_new();
