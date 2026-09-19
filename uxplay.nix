@@ -1,10 +1,26 @@
 { config, pkgs, lib, ... }:
 
 let
+  uxplayTray = pkgs.writeShellApplication {
+    name = "uxplay-tray";
+    runtimeInputs = [ pkgs.uxplay pkgs.yad ];
+    text = ''
+      uxplay -p &
+      UXPLAY_PID=$!
+
+      yad --notification \
+          --image="${./Airplay.png}" \
+          --text="UxPlay - AirPlay Receiver" \
+          --menu="Quit UxPlay!kill $UXPLAY_PID"
+
+      kill "$UXPLAY_PID" 2>/dev/null
+    '';
+  };
+
   uxplayDesktop = pkgs.makeDesktopItem {
     name = "uxplay";
     desktopName = "UxPlay";
-    exec = "uxplay -p";
+    exec = "uxplay-tray";
     icon = "uxplay";
     terminal = false;
   };
@@ -15,11 +31,9 @@ let
   '';
 in
 {
-  # Open network ports
   networking.firewall.allowedTCPPorts = [ 7000 7001 7100 ];
   networking.firewall.allowedUDPPorts = [ 5353 6000 6001 7011 ];
 
-  # To enable network-discovery
   services.avahi = {
     enable = true;
     nssmdns4 = true;
@@ -33,8 +47,8 @@ in
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    uxplay
+  environment.systemPackages = [
+    uxplayTray
     uxplayDesktop
     uxplayIcon
   ];
