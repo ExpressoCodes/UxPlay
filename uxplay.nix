@@ -15,7 +15,7 @@ let
       cp uxplay-tray $out/bin/
       wrapProgram $out/bin/uxplay-tray \
         --prefix PATH : ${lib.makeBinPath [ pkgs.uxplay ]} \
-        --set UXPLAY_ICON ${./uxplay.svg}
+        --set UXPLAY_ICON_THEME_PATH ${uxplayIcon}/share/icons/hicolor
     '';
   };
 
