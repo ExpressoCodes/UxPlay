@@ -7,7 +7,6 @@ let
     exec = "uxplay -p";
     icon = "uxplay";
     terminal = false;
-    encoding = "UTF-8";
   };
 
   uxplayIcon = pkgs.runCommand "uxplay-icon" {} ''
