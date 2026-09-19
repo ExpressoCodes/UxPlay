@@ -14,7 +14,8 @@ let
       mkdir -p $out/bin
       cp uxplay-tray $out/bin/
       wrapProgram $out/bin/uxplay-tray \
-        --prefix PATH : ${lib.makeBinPath [ pkgs.uxplay ]}
+        --prefix PATH : ${lib.makeBinPath [ pkgs.uxplay ]} \
+        --set UXPLAY_ICON ${./uxplay.svg}
     '';
   };
 
@@ -27,8 +28,8 @@ let
   };
 
   uxplayIcon = pkgs.runCommand "uxplay-icon" {} ''
-    mkdir -p $out/share/icons/hicolor/256x256/apps
-    cp ${./Airplay.png} $out/share/icons/hicolor/256x256/apps/uxplay.png
+    mkdir -p $out/share/icons/hicolor/scalable/apps
+    cp ${./uxplay.svg} $out/share/icons/hicolor/scalable/apps/uxplay.svg
   '';
 in
 {
