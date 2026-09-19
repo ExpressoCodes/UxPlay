@@ -30,6 +30,7 @@ let
   uxplayIcon = pkgs.runCommand "uxplay-icon" {} ''
     mkdir -p $out/share/icons/hicolor/scalable/apps
     cp ${./uxplay.svg} $out/share/icons/hicolor/scalable/apps/uxplay-indicator.svg
+    cp ${./uxplay.svg} $out/share/icons/hicolor/scalable/apps/uxplay.svg
   '';
 in
 {
