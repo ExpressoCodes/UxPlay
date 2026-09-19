@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
     const char *theme_path = getenv("UXPLAY_ICON_THEME_PATH");
     AppIndicator *indicator = app_indicator_new_with_path(
-        "uxplay", "uxplay",
+        "uxplay-indicator", "uxplay-indicator",
         APP_INDICATOR_CATEGORY_APPLICATION_STATUS,
         theme_path ? theme_path : "");
     app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
