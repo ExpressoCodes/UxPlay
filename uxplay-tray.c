@@ -1,6 +1,7 @@
 #include <libayatana-appindicator/app-indicator.h>
 #include <gtk/gtk.h>
 #include <signal.h>
+#include <stdlib.h>
 
 static GPid uxplay_pid = 0;
 
@@ -23,6 +24,13 @@ int main(int argc, char *argv[]) {
 
     AppIndicator *indicator = app_indicator_new(
         "uxplay", "uxplay", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+
+    /* Use the icon theme path injected by wrapProgram so the icon is found
+       even though it lives in a Nix store path rather than the system theme. */
+    const char *theme_path = getenv("UXPLAY_ICON_THEME_PATH");
+    if (theme_path)
+        app_indicator_set_icon_theme_path(indicator, theme_path);
+
     app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
 
     GtkWidget *menu = gtk_menu_new();
