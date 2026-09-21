@@ -33,7 +33,7 @@
       uxplayDesktop = pkgs.makeDesktopItem {
         name = "uxplay";
         desktopName = "UxPlay";
-        exec = "uxplay-tray";
+        exec = "uxplay -p";
         icon = "uxplay";
         terminal = false;
         comment = "AirPlay mirroring server — streams from iPhone/iPad/Mac";
