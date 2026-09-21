@@ -9,14 +9,33 @@
       uxplayIcon = pkgs.runCommand "uxplay-icon" {} ''
         mkdir -p $out/share/icons/hicolor/scalable/apps
         cp ${./uxplay.svg} $out/share/icons/hicolor/scalable/apps/uxplay.svg
+        cp ${./uxplay.svg} $out/share/icons/hicolor/scalable/apps/uxplay-indicator.svg
       '';
+
+      uxplayTray = pkgs.stdenv.mkDerivation {
+        name = "uxplay-tray";
+        src = ./.;
+        nativeBuildInputs = [ pkgs.pkg-config pkgs.makeWrapper ];
+        buildInputs = [ pkgs.gtk3 pkgs.libayatana-appindicator ];
+        buildPhase = ''
+          cc uxplay-tray.c -o uxplay-tray \
+            $(pkg-config --cflags --libs gtk+-3.0 ayatana-appindicator3-0.1)
+        '';
+        installPhase = ''
+          mkdir -p $out/bin
+          cp uxplay-tray $out/bin/
+          wrapProgram $out/bin/uxplay-tray \
+            --prefix PATH : ${lib.makeBinPath [ pkgs.uxplay ]} \
+            --set UXPLAY_ICON_THEME_PATH ${uxplayIcon}/share/icons/hicolor
+        '';
+      };
 
       uxplayDesktop = pkgs.makeDesktopItem {
         name = "uxplay";
         desktopName = "UxPlay";
-        exec = "uxplay";
+        exec = "uxplay-tray";
         icon = "uxplay";
-        terminal = true;
+        terminal = false;
         comment = "AirPlay mirroring server — streams from iPhone/iPad/Mac";
         categories = [ "Utility" "Network" ];
       };
@@ -37,7 +56,7 @@
       };
 
       config = lib.mkIf config.services.uxplay.enable {
-        environment.systemPackages = [ pkgs.uxplay uxplayIcon uxplayDesktop ];
+        environment.systemPackages = [ pkgs.uxplay uxplayTray uxplayIcon uxplayDesktop ];
 
         services.avahi = {
           enable = true;
